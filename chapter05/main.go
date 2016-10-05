@@ -1,11 +1,16 @@
-// Listing 5.50
-// Sample program to show how to embed a type into another type and
-// the relationship between the inner and outer type.
+// Listing 5.56
+// Sample program to show how embedded types work with interfaces.
 package main
 
 import (
 	"fmt"
 )
+
+// notifier is an interface that defined notification
+// type behavior.
+type notifier interface {
+	notify()
+}
 
 // user defines a user in the program.
 type user struct {
@@ -23,7 +28,7 @@ func (u *user) notify() {
 
 // admin represents an admin user with privileges.
 type admin struct {
-	user  // Embedded Type
+	user
 	level string
 }
 
@@ -38,9 +43,14 @@ func main() {
 		level: "super",
 	}
 
-	// We can access the inner type's method directly.
-	ad.user.notify()
+	// Send the admin user a notification.
+	// The embedded inner type's implementation of the
+	// interface is "promoted" to the outer type.
+	sendNotification(&ad)
+}
 
-	// The inner type's method is promoted.
-	ad.notify()
+// sendNotification accepts values that implement the notifier
+// interface and sends notifications.
+func sendNotification(n notifier) {
+	n.notify()
 }
