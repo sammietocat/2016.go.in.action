@@ -1,4 +1,4 @@
-// Listing 5.71
+// Listing 5.74
 // Sample program to show how unexported fields from an exported
 // struct type can't be accessed directly.
 package main
@@ -11,16 +11,15 @@ import (
 
 // main is the entry point for the application.
 func main() {
-	// Create a value of type User from the entities package.
-	u := entities.User{
-		Name:  "Bill",
-		email: "bill@email.com",
+	// Create a value of type Admin from the entities package.
+	a := entities.Admin{
+		Rights: 10,
 	}
 
-	/*
-	  ./main.go:17: unknown entities.User field 'email' in struct literal
-	   exit status 2
-	*/
+	// Set the exported fields from the unexported
+	// inner type.
+	a.Name = "Bill"
+	a.Email = "bill@email.com"
 
-	fmt.Printf("User: %v\n", u)
+	fmt.Printf("User: %v\n", a)
 }

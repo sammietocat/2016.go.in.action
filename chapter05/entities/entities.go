@@ -3,7 +3,13 @@
 package entities
 
 // User defines a user in the program.
-type User struct {
+type user struct {
 	Name  string
-	email string
+	Email string
+}
+
+// Admin defines an admin in the program
+type Admin struct {
+	user   // The embedded type is unexported
+	Rights int
 }
