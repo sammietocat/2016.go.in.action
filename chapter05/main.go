@@ -1,9 +1,44 @@
+/**
+  Demo for method
+*/
 package main
 
-// Duration   Listing 5.9 Compiler error assigning value of different types
-type Duration int64
+import "fmt"
 
+/* Listing 5.11 */
+// Sample program to show how to declare methods and how the Go compiler supports them.
+
+// user defines a user in the program
+type user struct {
+	name  string
+	email string
+}
+
+// notify implements a method with a value receiver
+func (u user) notify() {
+	fmt.Printf("Sending User Email To %s<%s>\n", u.name, u.email)
+}
+
+// changeEmail implements a method with a pointer receiver
+func (u *user) changeEmail(email string) {
+	u.email = email
+}
+
+// main is the entry point for the application.
 func main() {
-	var dur Duration
-	dur = int64(1000)
+	// Values of type user can be used to call methods
+	// declared with a value receiver.
+	bill := user{"Bill", "bill@email.com"}
+	bill.notify()
+	// Pointers of type user can also be used to call methods
+	// declared with a value receiver.
+	lisa := &user{"Lisa", "lisa@email.com"}
+	lisa.notify()
+	// Values of type user can be used to call methods
+	// declared with a pointer receiver.
+	bill.changeEmail("bill@newdomain.com")
+	bill.notify() // Pointers of type user can be used to call methods
+	// declared with a pointer receiver.
+	lisa.changeEmail("lisa@comcast.com")
+	lisa.notify()
 }
