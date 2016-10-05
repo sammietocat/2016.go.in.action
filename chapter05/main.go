@@ -1,5 +1,6 @@
-// Listing 5.56
-// Sample program to show how embedded types work with interfaces.
+// Listing 5.60
+// Sample program to show what happens when the outer and inner
+// type implement the same interface.
 package main
 
 import (
@@ -32,6 +33,14 @@ type admin struct {
 	level string
 }
 
+// notify implements a method that can be called via
+// a value of type Admin.
+func (a *admin) notify() {
+	fmt.Printf("Sending admin email to %s<%s>\n",
+		a.name,
+		a.email)
+}
+
 // main is the entry point for the application.
 func main() {
 	// Create an admin user.
@@ -45,8 +54,14 @@ func main() {
 
 	// Send the admin user a notification.
 	// The embedded inner type's implementation of the
-	// interface is "promoted" to the outer type.
+	// interface is NOT "promoted" to the outer type.
 	sendNotification(&ad)
+
+	// We can access the inner type's method directly.
+	ad.user.notify()
+
+	// The inner type's method is NOT promoted.
+	ad.notify()
 }
 
 // sendNotification accepts values that implement the notifier
