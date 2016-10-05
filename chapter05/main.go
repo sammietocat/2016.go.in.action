@@ -1,36 +1,25 @@
 /**
-  Listing 5.34
-  Sample program to show how to write a simple version of curl using the io.Reader and io.Writer interface support
+  Sample program to show how a bytes.Buffer can also be used with the io.Copy function.
 */
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io"
-	"net/http"
 	"os"
 )
 
-// init is called before main.
-func init() {
-	if len(os.Args) != 2 {
-		fmt.Println("Usage: ./main <url>")
-		os.Exit(-1)
-	}
-}
-
-// main is the entry point for the application
+// main is the entry point for the application.
 func main() {
-	// Get a response from the web server
-	r, err := http.Get(os.Args[1])
-	if nil != err {
-		fmt.Println(err)
-		return
-	}
+	var b bytes.Buffer
 
-	// Copies from the Body to Stdout
-	io.Copy(os.Stdout, r.Body)
-	if err := r.Body.Close(); err != nil {
-		fmt.Println(err)
-	}
+	// Write a string to the buffer.
+	b.Write([]byte("Hello"))
+
+	// Use Fprintf to concatenate a string to the Buffer.
+	fmt.Fprintf(&b, "World!")
+
+	// Write the content of the Buffer to stdout.
+	io.Copy(os.Stdout, &b)
 }
