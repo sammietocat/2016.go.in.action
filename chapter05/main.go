@@ -1,25 +1,46 @@
-/**
-  Sample program to show how a bytes.Buffer can also be used with the io.Copy function.
-*/
+// Listing 5.36
+// Sample program to show how to use an interface in Go.
 package main
 
 import (
-	"bytes"
 	"fmt"
-	"io"
-	"os"
 )
+
+// notifier is an interface that defined notification
+// type behavior.
+type notifier interface {
+	notify()
+}
+
+// user defines a user in the program.
+type user struct {
+	name  string
+	email string
+}
+
+// notify implements a method with a pointer receiver.
+func (u *user) notify() {
+	fmt.Printf("Sending user email to %s<%s>\n",
+		u.name,
+		u.email)
+}
 
 // main is the entry point for the application.
 func main() {
-	var b bytes.Buffer
+	// Create a value of type User and send a notification.
+	u := user{"Bill", "bill@email.com"}
 
-	// Write a string to the buffer.
-	b.Write([]byte("Hello"))
+	sendNotification(u)
 
-	// Use Fprintf to concatenate a string to the Buffer.
-	fmt.Fprintf(&b, "World!")
+	/*
+	   ./main.go:33: cannot use u (type user) as type notifier in argument to sendNotification:
+	     user does not implement notifier (notify method has pointer receiver)
+	   exit status 2
+	*/
+}
 
-	// Write the content of the Buffer to stdout.
-	io.Copy(os.Stdout, &b)
+// sendNotification accepts values that implement the notifier
+// interface and sends notifications.
+func sendNotification(n notifier) {
+	n.notify()
 }
