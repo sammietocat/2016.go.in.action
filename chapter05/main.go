@@ -1,25 +1,26 @@
-// Listing 5.68
-// Sample program to show how the program can't access an
-// unexported identifier from another package.
+// Listing 5.71
+// Sample program to show how unexported fields from an exported
+// struct type can't be accessed directly.
 package main
 
 import (
 	"fmt"
 
-	"sammietocat/2016.go.in.action/chapter05/counters"
+	"sammietocat/2016.go.in.action/chapter05/entities"
 )
 
 // main is the entry point for the application.
 func main() {
-	// Create a variable of the unexported type and initialize
-	// the value to 10.
-	counter := counters.New(10)
+	// Create a value of type User from the entities package.
+	u := entities.User{
+		Name:  "Bill",
+		email: "bill@email.com",
+	}
 
 	/*
-		./main.go:15: cannot refer to unexported name counters.alertCounter
-		./main.go:15: undefined: counters.alertCounter
-		exit status 2
+	  ./main.go:17: unknown entities.User field 'email' in struct literal
+	   exit status 2
 	*/
 
-	fmt.Printf("Counter: %d\n", counter)
+	fmt.Printf("User: %v\n", u)
 }
